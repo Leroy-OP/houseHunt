@@ -228,4 +228,144 @@ Mapbox integration
 Booking/view scheduling
 Deployment (AWS / Render)
 Contributors
+13. Source Control Management (Git & GitHub)
+
+This project uses Git for version control and GitHub for collaboration.
+
+📥 13.1 Initialize Git (First Time Setup)
+
+Inside your project root:
+
+git init
+git add .
+git commit -m "Initial commit"
+
+🔗 13.2 Connect to GitHub Repository
+
+Create a repository on GitHub, then link it:
+
+git remote add origin https://github.com/<username>/house-hunting-system.git
+
+
+Verify:
+
+git remote -v
+
+
+Push your code:
+
+git branch -M main
+git push -u origin main
+
+🌿 13.3 Branching Strategy
+
+We use a feature-based workflow:
+
+Main Branches
+main → Production-ready code
+develop → Integration branch for all features
+Create Develop Branch
+git checkout -b develop
+git push -u origin develop
+
+Feature Branch Naming Convention
+
+Each contributor works on their own branch:
+
+feature/<feature-name>
+bugfix/<issue-name>
+
+
+Examples:
+
+feature/property-listing
+feature/authentication
+bugfix/navbar-routing
+
+👥 13.4 Contributor Workflow
+1. Pull latest changes
+git checkout develop
+git pull origin develop
+
+2. Create a feature branch
+git checkout -b feature/property-cards
+
+3. Work and commit changes
+git add .
+git commit -m "Add property card UI"
+
+4. Push branch to GitHub
+git push -u origin feature/property-cards
+
+5. Create Pull Request (PR)
+Go to GitHub repository
+Click “Compare & pull request”
+Merge into develop (NOT main)
+🔄 13.5 Merging Strategy
+All features → merged into develop
+Stable develop → merged into main
+🚫 13.6 Rules for Contributors
+❌ Do NOT push directly to main
+❌ Do NOT push untested code
+✅ Always create a feature branch
+✅ Always pull latest changes before starting work
+✅ Write meaningful commit messages
+🧾 13.7 Commit Message Convention
+
+Use clear, structured commits:
+
+feat: add property listing API
+fix: resolve navbar routing issue
+docs: update README instructions
+style: improve card layout UI
+
+🔄 13.8 Keeping Your Branch Updated
+git checkout develop
+git pull origin develop
+
+git checkout feature/your-branch
+git merge develop
+
+🧹 13.9 Delete Branch After Merge
+git branch -d feature/property-cards
+git push origin --delete feature/property-cards
+
+📦 13.10 .gitignore Setup
+
+Create a .gitignore file:
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
+media/
+
+# Node
+node_modules/
+dist/
+
+# Environment variables
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+🔐 13.11 Environment Variables (Recommended)
+
+Do NOT commit sensitive data like passwords.
+
+Use .env:
+
+DB_NAME=hunter_street
+DB_USER=group_7
+DB_PASSWORD=hunterstreet01
+
+🚀 13.12 Cloning the Project (For New Contributors)
+git clone https://github.com/<username>/house-hunting-system.git
+cd house-hunting-system
+git checkout develop
 Group 7
