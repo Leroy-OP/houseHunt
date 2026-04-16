@@ -219,7 +219,7 @@
 <script>
   import { MDBCard, MDBCardBody, MDBCardTitle, MDBCardText, MDBCardImg, MDBInput, MDBCardGroup, MDBCol, MDBRow, MDBFooter, MDBIcon, MDBContainer } from "mdb-vue-ui-kit";
   import { ref, computed } from "vue";
-  import { useRouter } from "vue-router";
+  import { useRouter } from "vue-router"; 
   export default {
     components: {
       MDBCard,

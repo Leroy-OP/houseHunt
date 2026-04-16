@@ -1,69 +1,210 @@
-System Architecture
+# House Hunting Platform
+
+A full-stack web application that enables property agencies to list rental properties and allows users to search, filter, and save listings efficiently.
+
+## 📌 Tech Stack
+
+### Frontend
+- Vue.js
+- Vuetify / MDB UI
+- Axios
+
+### Backend
+- Django
+- Django REST Framework
+
+### Database
+- MySQL (XAMPP or Docker)
+
+### DevOps
+- Docker & Docker Compose
+
+### Version Control
+- Git & GitHub
+
+## 🧭 System Architecture
+
+```
 Vue Frontend  →  Django REST API  →  MySQL Database
                       ↓
                 Media Storage (Images)
+```
 
-1. Project Setup
-Clone the Repository
-git clone <https://github.com/Leroy-OP/houseHunt>
+## 📁 Project Structure
+
+```
+house-hunting-system/
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   ├── vite.config.js
+│   └── Dockerfile
+│
+├── backend/
+│   ├── api/
+│   ├── backend/
+│   ├── manage.py
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   └── .env
+│
+├── docker/
+│   ├── nginx/
+│   └── scripts/
+│
+├── docker-compose.yml
+├── .gitignore
+├── .env.example
+└── README.md
+```
+
+## ⚙️ 1. Project Setup
+
+```bash
+git clone https://github.com/Leroy-OP/houseHunt.git
 cd houseHunt
+```
 
-2. Frontend Setup (Vue)
+## 🔧 2. Source Control Management (Git & GitHub)
+
+### Initialize Git
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+```
+
+### Connect Remote Repository
+
+```bash
+git remote add origin https://github.com/Leroy-OP/houseHunt.git
+git branch -M main
+git push -u origin main
+```
+
+### Branching Strategy
+
+| Branch | Purpose |
+|--------|---------|
+| main | Production-ready |
+| develop | Integration |
+| feature/* | New features |
+| bugfix/* | Fixes |
+
+### Create Develop Branch
+
+```bash
+git checkout -b develop
+git push -u origin develop
+```
+
+### Contributor Workflow
+
+```bash
+git checkout develop
+git pull origin develop
+
+git checkout -b feature/property-cards
+
+git add .
+git commit -m "feat: add property cards"
+
+git push -u origin feature/property-cards
+```
+
+Then create a Pull Request → merge into develop
+
+### Keep Branch Updated
+
+```bash
+git checkout develop
+git pull origin develop
+
+git checkout feature/your-branch
+git merge develop
+```
+
+### Delete Branch After Merge
+
+```bash
+git branch -d feature/property-cards
+git push origin --delete feature/property-cards
+```
+
+## 🖥️ 3. Frontend Setup (Vue)
+
+```bash
 cd frontend
 npm install
 npm run dev
+```
 
+Runs on: `http://localhost:5173`
 
-Frontend runs on:
+## 🧠 4. Backend Setup (Django)
 
-http://localhost:5173
+### Virtual Environment
 
-3. Backend Setup (Django)
-Create Virtual Environment
+```bash
 cd backend
 python -m venv venv
+```
 
-Activate:
-venv\Scripts\activate   # Windows
-source venv/bin/activate  # Linux/Mac
+**Activate:**
 
-Install Dependencies
+On Windows:
+```bash
+venv\Scripts\activate
+```
+
+On macOS/Linux:
+```bash
+source venv/bin/activate
+```
+
+### Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
+### MySQL Fix (if needed)
 
-If no requirements file:
-
-pip install django djangorestframework mysqlclient pillow pymysql django-cors-headers
-
-Configure PyMySQL (if mysqlclient fails)
-# backend/__init__.py
+Add this to `backend/__init__.py`:
+```python
 import pymysql
 pymysql.install_as_MySQLdb()
+```
 
-4. Database Setup (MySQL via XAMPP)
-Start Services
-Open XAMPP
-Start:
-Apache
-MySQL
-Create Database
+## 🗄️ 5. Database Setup (MySQL)
 
-Go to:
+### Using XAMPP
 
-http://localhost/phpmyadmin
+1. Start Apache & MySQL
+2. Open: `http://localhost/phpmyadmin`
 
+### Create Database
 
-Create database:
+```sql
+CREATE DATABASE hunter_street;
+```
 
-hunter_street
+### Create User
 
-Create User (optional)
+```sql
 CREATE USER 'group_7'@'localhost' IDENTIFIED BY 'hunterstreet01';
 GRANT ALL PRIVILEGES ON hunter_street.* TO 'group_7'@'localhost';
 FLUSH PRIVILEGES;
+```
 
-Connect Django to MySQL
-# settings.py
+### Connect Django to MySQL
+
+Update `settings.py`:
+
+```python
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -74,88 +215,97 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+```
 
-5. Run Migrations (Creates Tables)
+## 🔄 6. Run Migrations
+
+```bash
 python manage.py makemigrations
 python manage.py migrate
+```
 
+## 👤 7. Create Admin User
 
-Tables will appear automatically in phpMyAdmin.
-
-6. Create Admin User
+```bash
 python manage.py createsuperuser
-
-
-Run server:
-
 python manage.py runserver
+```
 
+Access admin at: `http://127.0.0.1:8000/admin`
 
-Access:
+## 🔌 8. API Usage
 
-http://127.0.0.1:8000/admin/
+Example endpoints:
 
-7. API Endpoints
+```bash
+GET /api/properties/
+POST /api/properties/
+```
 
-Example:
+## 🔗 9. Connect Frontend to Backend
 
-GET     /api/properties/
-POST    /api/properties/
-GET     /api/properties/{id}/
-PUT     /api/properties/{id}/
-DELETE  /api/properties/{id}/
+Update your Vue components to use:
 
-8. Connect Vue to Django
-
-Example Axios call:
-
+```javascript
 axios.get("http://127.0.0.1:8000/api/properties/")
-  .then(response => {
-    console.log(response.data);
-  });
+```
 
-9. Media Configuration (Images)
-# settings.py
+## 🖼️ 10. Media Setup
+
+Add to Django `settings.py`:
+
+```python
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+```
 
-# urls.py
-from django.conf import settings
-from django.conf.urls.static import static
+## 🔐 11. CORS Setup
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+Add to Django `settings.py`:
 
-10. CORS Configuration
-INSTALLED_APPS = [
-    'corsheaders',
-]
-
-MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-]
-
+```python
 CORS_ALLOW_ALL_ORIGINS = True
+```
 
-11. Docker Setup (Production Ready)
-Create Dockerfile (Backend)
+Or use specific origins in production:
+
+```python
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+```
+
+## 🐳 12. Docker Setup
+
+### Backend Dockerfile
+
+```dockerfile
 FROM python:3.11
-
 WORKDIR /app
-
 COPY . .
-
-RUN pip install --no-cache-dir -r requirements.txt
-
+RUN pip install -r requirements.txt
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+```
 
-Create docker-compose.yml
+### Frontend Dockerfile
+
+```dockerfile
+FROM node:18
+WORKDIR /app
+COPY . .
+RUN npm install
+CMD ["npm", "run", "dev"]
+```
+
+### docker-compose.yml
+
+```yaml
 version: '3.9'
 
 services:
   db:
     image: mysql:8.0
-    container_name: mysql_db
-    restart: always
     environment:
       MYSQL_DATABASE: hunter_street
       MYSQL_USER: group_7
@@ -163,15 +313,9 @@ services:
       MYSQL_ROOT_PASSWORD: rootpassword
     ports:
       - "3307:3306"
-    volumes:
-      - db_data:/var/lib/mysql
 
   backend:
     build: ./backend
-    container_name: django_backend
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - ./backend:/app
     ports:
       - "8000:8000"
     depends_on:
@@ -179,182 +323,73 @@ services:
 
   frontend:
     build: ./frontend
-    container_name: vue_frontend
     ports:
       - "5173:5173"
-    volumes:
-      - ./frontend:/app
-    command: npm run dev
+```
 
-volumes:
-  db_data:
+### Run Project with Docker
 
-Run with Docker
+```bash
 docker-compose up --build
+```
 
-12. Features
-Property listing system
-Image uploads
-Search & filtering
-Favorites system (planned)
-Map integration (planned)
-Agent/user authentication (planned)
-Troubleshooting
-MySQL not starting (XAMPP)
-Delete aria_log.* files
-Check port conflicts
-Run XAMPP as administrator
-Django not connecting to DB
-Check credentials in settings.py
-Ensure MySQL is running
-Images not loading
-Check MEDIA_URL and MEDIA_ROOT
-Future Improvements
-JWT Authentication
-Role-based access (Agent/User)
-Mapbox integration
-Booking/view scheduling
-Deployment (AWS / Render)
-Contributors
-13. Source Control Management (Git & GitHub)
+## 📦 .env Example
 
-This project uses Git for version control and GitHub for collaboration.
-
-13.1 Initialize Git (First Time Setup)
-
-Inside your project root:
-
-git init
-git add .
-git commit -m "Initial commit"
-
-13.2 Connect to GitHub Repository
-
-Create a repository on GitHub, then link it:
-
-git remote add origin https://github.com/<username>/house-hunting-system.git
-
-
-Verify:
-
-git remote -v
-
-
-Push your code:
-
-git branch -M main
-git push -u origin main
-
-13.3 Branching Strategy
-
-We use a feature-based workflow:
-
-Main Branches
-main → Production-ready code
-develop → Integration branch for all features
-Create Develop Branch
-git checkout -b develop
-git push -u origin develop
-
-Feature Branch Naming Convention
-
-Each contributor works on their own branch:
-
-feature/<feature-name>
-bugfix/<issue-name>
-
-
-Examples:
-
-feature/property-listing
-feature/authentication
-bugfix/navbar-routing
-
-13.4 Contributor Workflow
-1. Pull latest changes
-git checkout develop
-git pull origin develop
-
-2. Create a feature branch
-git checkout -b feature/property-cards
-
-3. Work and commit changes
-git add .
-git commit -m "Add property card UI"
-
-4. Push branch to GitHub
-git push -u origin feature/property-cards
-
-5. Create Pull Request (PR)
-Go to GitHub repository
-Click “Compare & pull request”
-Merge into develop (NOT main)
-
-13.5 Merging Strategy
-All features → merged into develop
-Stable develop → merged into main
-13.6 Rules for Contributors
-❌ Do NOT push directly to main
-❌ Do NOT push untested code
-✅ Always create a feature branch
-✅ Always pull latest changes before starting work
-✅ Write meaningful commit messages
-🧾 13.7 Commit Message Convention
-
-Use clear, structured commits:
-
-feat: add property listing API
-fix: resolve navbar routing issue
-docs: update README instructions
-style: improve card layout UI
-
-13.8 Keeping Your Branch Updated
-git checkout develop
-git pull origin develop
-
-git checkout feature/your-branch
-git merge develop
-
-13.9 Delete Branch After Merge
-git branch -d feature/property-cards
-git push origin --delete feature/property-cards
-
-13.10 .gitignore Setup
-
-Create a .gitignore file:
-
-# Python
-venv/
-__pycache__/
-*.pyc
-
-# Django
-db.sqlite3
-media/
-
-# Node
-node_modules/
-dist/
-
-# Environment variables
-.env
-
-# OS files
-.DS_Store
-Thumbs.db
-
-13.11 Environment Variables (Recommended)
-
-Do NOT commit sensitive data like passwords.
-
-Use .env:
-
+```
 DB_NAME=hunter_street
 DB_USER=group_7
 DB_PASSWORD=hunterstreet01
+DB_HOST=db
+DB_PORT=3306
+```
 
-13.12 Cloning the Project (For New Contributors)
-git clone https://github.com/<username>/house-hunting-system.git
-cd house-hunting-system
-git checkout develop
-Group 7
+## 🚫 .gitignore
+
+```
+venv/
+__pycache__/
+*.pyc
+node_modules/
+dist/
+.env
+```
+
+## 🚀 Features
+
+- ✅ Property listings
+- ✅ Image uploads
+- ✅ Search & filtering
+- 🔄 Favorites (planned)
+- 🔄 Maps integration (planned)
+
+## ⚠️ Troubleshooting
+
+### MySQL not starting
+- Delete `aria_log.*` files
+- Check for port conflicts
+
+### Django DB connection error
+- Verify database credentials in `settings.py`
+- Ensure MySQL service is running
+
+### Frontend not connecting to backend
+- Check CORS settings
+- Verify backend URL in axios calls
+- Ensure both services are running
+
+## 🧭 Future Improvements
+
+- JWT Authentication
+- Role-based access control
+- Mapbox integration
+- Cloud deployment (AWS/Heroku)
+- Email notifications
+
+## 👨‍💻 Contributors
+
+**Group 7**
+- Leroy-OP
+
+## 📄 License
+
+This project is licensed under the MIT License.
