@@ -1,16 +1,4 @@
-Tech Stack
-Frontend
-Vue.js
-Vuetify / MDB UI
-Axios (API communication)
-Backend
-Django
-Django REST Framework (DRF)
-Database
-MySQL (via XAMPP or standalone)
-DevOps
-Docker & Docker Compose
-🧭 System Architecture
+System Architecture
 Vue Frontend  →  Django REST API  →  MySQL Database
                       ↓
                 Media Storage (Images)
@@ -52,7 +40,7 @@ Configure PyMySQL (if mysqlclient fails)
 import pymysql
 pymysql.install_as_MySQLdb()
 
-🗄️ 4. Database Setup (MySQL via XAMPP)
+4. Database Setup (MySQL via XAMPP)
 Start Services
 Open XAMPP
 Start:
@@ -117,7 +105,7 @@ GET     /api/properties/{id}/
 PUT     /api/properties/{id}/
 DELETE  /api/properties/{id}/
 
-🔌 8. Connect Vue to Django
+8. Connect Vue to Django
 
 Example Axios call:
 
@@ -232,7 +220,7 @@ Contributors
 
 This project uses Git for version control and GitHub for collaboration.
 
-📥 13.1 Initialize Git (First Time Setup)
+13.1 Initialize Git (First Time Setup)
 
 Inside your project root:
 
@@ -240,7 +228,7 @@ git init
 git add .
 git commit -m "Initial commit"
 
-🔗 13.2 Connect to GitHub Repository
+13.2 Connect to GitHub Repository
 
 Create a repository on GitHub, then link it:
 
@@ -257,7 +245,7 @@ Push your code:
 git branch -M main
 git push -u origin main
 
-🌿 13.3 Branching Strategy
+13.3 Branching Strategy
 
 We use a feature-based workflow:
 
@@ -282,7 +270,7 @@ feature/property-listing
 feature/authentication
 bugfix/navbar-routing
 
-👥 13.4 Contributor Workflow
+13.4 Contributor Workflow
 1. Pull latest changes
 git checkout develop
 git pull origin develop
@@ -301,10 +289,11 @@ git push -u origin feature/property-cards
 Go to GitHub repository
 Click “Compare & pull request”
 Merge into develop (NOT main)
-🔄 13.5 Merging Strategy
+
+13.5 Merging Strategy
 All features → merged into develop
 Stable develop → merged into main
-🚫 13.6 Rules for Contributors
+13.6 Rules for Contributors
 ❌ Do NOT push directly to main
 ❌ Do NOT push untested code
 ✅ Always create a feature branch
@@ -319,18 +308,18 @@ fix: resolve navbar routing issue
 docs: update README instructions
 style: improve card layout UI
 
-🔄 13.8 Keeping Your Branch Updated
+13.8 Keeping Your Branch Updated
 git checkout develop
 git pull origin develop
 
 git checkout feature/your-branch
 git merge develop
 
-🧹 13.9 Delete Branch After Merge
+13.9 Delete Branch After Merge
 git branch -d feature/property-cards
 git push origin --delete feature/property-cards
 
-📦 13.10 .gitignore Setup
+13.10 .gitignore Setup
 
 Create a .gitignore file:
 
@@ -354,7 +343,7 @@ dist/
 .DS_Store
 Thumbs.db
 
-🔐 13.11 Environment Variables (Recommended)
+13.11 Environment Variables (Recommended)
 
 Do NOT commit sensitive data like passwords.
 
@@ -364,7 +353,7 @@ DB_NAME=hunter_street
 DB_USER=group_7
 DB_PASSWORD=hunterstreet01
 
-🚀 13.12 Cloning the Project (For New Contributors)
+13.12 Cloning the Project (For New Contributors)
 git clone https://github.com/<username>/house-hunting-system.git
 cd house-hunting-system
 git checkout develop
