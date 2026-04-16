@@ -1,38 +1,231 @@
-# houseHunt
+Tech Stack
+Frontend
+Vue.js
+Vuetify / MDB UI
+Axios (API communication)
+Backend
+Django
+Django REST Framework (DRF)
+Database
+MySQL (via XAMPP or standalone)
+DevOps
+Docker & Docker Compose
+🧭 System Architecture
+Vue Frontend  →  Django REST API  →  MySQL Database
+                      ↓
+                Media Storage (Images)
 
-This template should help get you started developing with Vue 3 in Vite.
+1. Project Setup
+Clone the Repository
+git clone <https://github.com/Leroy-OP/houseHunt>
+cd houseHunt
 
-## Recommended IDE Setup
-
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Recommended Browser Setup
-
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
+2. Frontend Setup (Vue)
+cd frontend
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
-```
 
-### Compile and Minify for Production
 
-```sh
-npm run build
-```
+Frontend runs on:
+
+http://localhost:5173
+
+3. Backend Setup (Django)
+Create Virtual Environment
+cd backend
+python -m venv venv
+
+Activate:
+venv\Scripts\activate   # Windows
+source venv/bin/activate  # Linux/Mac
+
+Install Dependencies
+pip install -r requirements.txt
+
+
+If no requirements file:
+
+pip install django djangorestframework mysqlclient pillow pymysql django-cors-headers
+
+Configure PyMySQL (if mysqlclient fails)
+# backend/__init__.py
+import pymysql
+pymysql.install_as_MySQLdb()
+
+🗄️ 4. Database Setup (MySQL via XAMPP)
+Start Services
+Open XAMPP
+Start:
+Apache
+MySQL
+Create Database
+
+Go to:
+
+http://localhost/phpmyadmin
+
+
+Create database:
+
+hunter_street
+
+Create User (optional)
+CREATE USER 'group_7'@'localhost' IDENTIFIED BY 'hunterstreet01';
+GRANT ALL PRIVILEGES ON hunter_street.* TO 'group_7'@'localhost';
+FLUSH PRIVILEGES;
+
+Connect Django to MySQL
+# settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'hunter_street',
+        'USER': 'group_7',
+        'PASSWORD': 'hunterstreet01',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
+
+5. Run Migrations (Creates Tables)
+python manage.py makemigrations
+python manage.py migrate
+
+
+Tables will appear automatically in phpMyAdmin.
+
+6. Create Admin User
+python manage.py createsuperuser
+
+
+Run server:
+
+python manage.py runserver
+
+
+Access:
+
+http://127.0.0.1:8000/admin/
+
+7. API Endpoints
+
+Example:
+
+GET     /api/properties/
+POST    /api/properties/
+GET     /api/properties/{id}/
+PUT     /api/properties/{id}/
+DELETE  /api/properties/{id}/
+
+🔌 8. Connect Vue to Django
+
+Example Axios call:
+
+axios.get("http://127.0.0.1:8000/api/properties/")
+  .then(response => {
+    console.log(response.data);
+  });
+
+9. Media Configuration (Images)
+# settings.py
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# urls.py
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+10. CORS Configuration
+INSTALLED_APPS = [
+    'corsheaders',
+]
+
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+11. Docker Setup (Production Ready)
+Create Dockerfile (Backend)
+FROM python:3.11
+
+WORKDIR /app
+
+COPY . .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+Create docker-compose.yml
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: hunter_street
+      MYSQL_USER: group_7
+      MYSQL_PASSWORD: hunterstreet01
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  backend:
+    build: ./backend
+    container_name: django_backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    container_name: vue_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    command: npm run dev
+
+volumes:
+  db_data:
+
+Run with Docker
+docker-compose up --build
+
+12. Features
+Property listing system
+Image uploads
+Search & filtering
+Favorites system (planned)
+Map integration (planned)
+Agent/user authentication (planned)
+Troubleshooting
+MySQL not starting (XAMPP)
+Delete aria_log.* files
+Check port conflicts
+Run XAMPP as administrator
+Django not connecting to DB
+Check credentials in settings.py
+Ensure MySQL is running
+Images not loading
+Check MEDIA_URL and MEDIA_ROOT
+Future Improvements
+JWT Authentication
+Role-based access (Agent/User)
+Mapbox integration
+Booking/view scheduling
+Deployment (AWS / Render)
+Contributors
+Group 7

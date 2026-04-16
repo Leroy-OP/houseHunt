@@ -73,6 +73,39 @@
     </div>
   </div>
 </div>
+<div class="content-area">
+    <div class="discover-page">
+        <h1 class="text-left mt-4" style="color: black; font-weight: 300px;">Reliable Agencies</h1>
+      <router-link to="/properties" class="see-all-link text-right">See all</router-link>
+
+     <MDBRow :cols="['1', 'md-3']" class="g-4">
+      <MDBCol v-for="(card, index) in cards" :key="card.title">
+        <MDBCard class="h-100 hover-zoom card-relative">
+          <div class="status-overlay">
+            <span class="status">{{ card.status }}</span>
+          </div>
+          <div class="save-overlay">
+            <button class="save-btn" @click="toggleSave(card)">
+              <i :class="savedCards.includes(card) ? 'fas fa-heart text-danger' : 'far fa-heart'"></i>
+            </button>
+          </div>
+          <div v-if="index === 2" class="arrow-overlay">
+            <button class="arrow-btn" @click="goToProperties">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+          <MDBCardImg :src="card.img" top alt="..."/>
+          <MDBCardBody>
+            <MDBCardTitle>{{ card.title }}</MDBCardTitle>
+            <MDBCardText>
+              {{ card.text }}
+            </MDBCardText>
+          </MDBCardBody>
+        </MDBCard>
+      </MDBCol>
+    </MDBRow>
+    </div>
+  </div>
  <!-- Footer -->
   <MDBFooter :text="['center', 'lg-start', 'muted']">
     <!-- Section: Social media -->
