@@ -301,7 +301,6 @@
     }
   };
 </script>
-
 <style scoped>
 .page-container {
   width: 100%;
