@@ -1,30 +1,4 @@
-# House Hunting Platform
-
-A full-stack web application that enables property agencies to list rental properties and allows users to search, filter, and save listings efficiently.
-
-## 📌 Tech Stack
-
-### Frontend
-- Vue.js
-- Vuetify / MDB UI
-- Axios
-
-### Backend
-- Django
-- Django REST Framework
-
-### Database
-- MySQL (XAMPP or Docker)
-
-### DevOps
-- Docker & Docker Compose
-
-### Version Control
-- Git & GitHub
-
-## 🧭 System Architecture
-
-```
+System Architecture
 Vue Frontend  →  Django REST API  →  MySQL Database
                       ↓
                 Media Storage (Images)
