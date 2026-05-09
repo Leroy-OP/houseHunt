@@ -1,7 +1,7 @@
 <template>
   <div class="about-page">
 
-    <!-- ── HERO ──────────────────────────────────────────────────────── -->
+    <!-- ── HERO  -->
     <section class="about-hero">
       <div class="about-hero-bg"></div>
       <div class="about-hero-overlay"></div>

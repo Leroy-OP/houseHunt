@@ -1,34 +1,40 @@
-Backend Django project for houseHunt
+# HouseHunt Backend
 
-Quick start (local dev):
+A robust backend API for the **HouseHunt** real estate platform, built with Django and Django REST Framework. This service powers property listings, agency management, user authentication, and property booking workflows.
 
-1. Create a Python virtualenv and activate it.
+---
 
-```bash
-python -m venv .venv
-source .venv/bin/activate  # or .venv\Scripts\activate on Windows
-pip install -r requirements.txt
-```
+## Features
 
-2. Configure MySQL credentials via environment variables (see `.env.example`).
+- User registration and authentication using JWT
+- Agency profile management
+- Property listing creation and management
+- Property image uploads
+- Amenities support
+- Property booking system
+- PostgreSQL database integration
+- Django admin interface
 
-3. Run migrations:
+---
 
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
+## Technology Stack
 
-4. Create a superuser:
+- Python 3.10+
+- Django
+- Django REST Framework
+- PostgreSQL
+- Simple JWT for authentication
 
-```bash
-python manage.py createsuperuser
-```
+---
 
-5. Run the dev server:
+## Project Structure
 
-```bash
-python manage.py runserver
-```
-
-The API is available under `/api/` (e.g. `/api/properties/`).
+```text
+houseHunt/
+├── backend/
+│   ├── backend/          # Django project settings
+│   ├── listings/         # Main application (models, serializers, views, URLs)
+│   ├── manage.py
+│   └── requirements.txt
+├── .env.example
+└── README.md
