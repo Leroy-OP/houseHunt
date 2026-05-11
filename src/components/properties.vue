@@ -307,10 +307,8 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
-// ─── Config ───────────────────────────────────────────────────────────────────
 const API_BASE = 'http://127.0.0.1:8000';
 
-// ─── State ────────────────────────────────────────────────────────────────────
 const properties   = ref([]);
 const loading      = ref(false);
 const refreshing   = ref(false);
@@ -383,11 +381,6 @@ const resolveAgencyName = (p) => {
   return null;
 };
 
-// ─── Shape a raw API property ─────────────────────────────────────────────────
-/**
- * FIX: amenities are kept as full objects { id, name, icon } exactly as
- * the API returns them. No ID registry, no normalisation needed.
- */
 const shapeProperty = (p) => ({
   id:                p.id,
   title:             p.title          || 'No Title',

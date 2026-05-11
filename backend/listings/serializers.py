@@ -5,20 +5,12 @@ from .models import Agency, Property, Booking, PropertyImage, Amenity
 
 User = get_user_model()
 
-
-# =========================
-# AMENITY
-# =========================
-
 class AmenitySerializer(serializers.ModelSerializer):
     class Meta:
         model  = Amenity
         fields = ['id', 'name', 'icon']
 
 
-# =========================
-# USER
-# =========================
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
@@ -46,19 +38,12 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 
-# =========================
-# AGENCY
-# =========================
 
 class AgencySerializer(serializers.ModelSerializer):
     class Meta:
         model  = Agency
         fields = '__all__'
 
-
-# =========================
-# PROPERTY IMAGE
-# =========================
 
 class PropertyImageSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
@@ -75,21 +60,14 @@ class PropertyImageSerializer(serializers.ModelSerializer):
         return None
 
 
-# =========================
-# PROPERTY
-# =========================
-
 class PropertySerializer(serializers.ModelSerializer):
 
-    # ---- read-only nested representations ----
     amenities     = AmenitySerializer(many=True, read_only=True)
     agency_detail = AgencySerializer(source='agency', read_only=True)
 
-    # 'images' matches related_name='images' on PropertyImage — no source= needed.
     images = PropertyImageSerializer(many=True, read_only=True)
 
-    # ---- write-only fields ----
-    # Frontend sends amenity_ids=[1,2,3]; DRF maps it to validated_data['amenities']
+
     amenity_ids = serializers.PrimaryKeyRelatedField(
         queryset=Amenity.objects.all(),
         many=True,
@@ -135,13 +113,9 @@ class PropertySerializer(serializers.ModelSerializer):
         data.setdefault('images', [])
         return data
 
-    # ------------------------------------------------------------------
-    # CREATE
-    # ------------------------------------------------------------------
     def create(self, validated_data):
         request   = self.context.get('request')
 
-        # 'amenities' is populated from the amenity_ids write field
         amenities = validated_data.pop('amenities', [])
 
         instance = Property.objects.create(**validated_data)
@@ -150,15 +124,11 @@ class PropertySerializer(serializers.ModelSerializer):
 
         return instance
 
-    # ------------------------------------------------------------------
-    # UPDATE
-    # ------------------------------------------------------------------
+
     def update(self, instance, validated_data):
         request   = self.context.get('request')
 
-        # amenity_ids from the request comes through as 'amenities'
-        # in validated_data due to source='amenities' on the field.
-        # Pop with sentinel None so we can distinguish "not sent" from "sent empty".
+    
         amenities = validated_data.pop('amenities', None)
 
         for attr, value in validated_data.items():
@@ -172,9 +142,7 @@ class PropertySerializer(serializers.ModelSerializer):
 
         return instance
 
-    # ------------------------------------------------------------------
-    # Image helper — single source of truth for both create and update
-    # ------------------------------------------------------------------
+    
     def _handle_images(self, request, instance, replace: bool):
         if not request:
             return
@@ -184,16 +152,12 @@ class PropertySerializer(serializers.ModelSerializer):
             return
 
         if replace:
-            # Use the correct related manager — related_name='images'
+            
             instance.images.all().delete()
 
         for image_file in uploaded:
             PropertyImage.objects.create(property=instance, image=image_file)
 
-
-# =========================
-# BOOKING
-# =========================
 
 class BookingSerializer(serializers.ModelSerializer):
     property_detail = PropertySerializer(source='property', read_only=True)

@@ -957,14 +957,11 @@
 <script>
 import { ref, computed, reactive, onMounted, watch } from 'vue';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// API SERVICE LAYER
-// ─────────────────────────────────────────────────────────────────────────────
+// ──
 const API_BASE = import.meta.env?.VITE_API_BASE_URL || '/api';
 
 function getAuthToken() {
-  // Supports both localStorage token and cookie-based auth.
-  // Adjust the key to match your auth setup.
+
   return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token') || '';
 }
 
@@ -1014,9 +1011,6 @@ async function apiUpload(endpoint, file, extraFields = {}) {
   return data;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// COMPONENT
-// ─────────────────────────────────────────────────────────────────────────────
 export default {
   name: 'SettingsPage',
 
@@ -1291,7 +1285,7 @@ export default {
       }
     };
 
-    // ── Security: 2FA ──────────────────────────────────────────────────
+   
     const tfaOptions = reactive([]);
 
     const fetchTFA = async () => {
@@ -1321,7 +1315,6 @@ export default {
       }
     };
 
-    // ── Security: Sessions ─────────────────────────────────────────────
     const sessions = reactive([]);
 
     const fetchSessions = async () => {
@@ -1631,10 +1624,10 @@ export default {
       try {
         const data = await apiFetch('GET', '/agent/commission');
         Object.assign(commissionForm, {
-          residential:   data.residential   ?? 3,
-          commercial:    data.commercial    ?? 4,
-          rental:        data.rental        ?? 8,
-          offplan:       data.offplan       ?? 5,
+          residential:   data.residential   ?? '',
+          commercial:    data.commercial    ?? '',
+          rental:        data.rental        ?? '',
+          offplan:       data.offplan       ?? '',
           bankName:      data.bankName      || '',
           accountNumber: data.accountNumber || '',
           frequency:     data.frequency     || 'Monthly',

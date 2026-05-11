@@ -22,7 +22,7 @@
       </div>
     </section>
 
-    <!-- ── MISSION ────────────────────────────────────────────────────── -->
+    <!-- ── MISSION  -->
     <section class="mission-section">
       <div class="mission-inner">
         <div class="mission-text">
@@ -71,7 +71,7 @@
       </div>
     </section>
 
-    <!-- ── HOW IT WORKS ───────────────────────────────────────────────── -->
+    <!-- ── HOW IT WORKS -->
     <section class="how-section">
       <div class="section-head centered">
         <p class="section-eyebrow">PROCESS</p>
@@ -91,7 +91,7 @@
       </div>
     </section>
 
-    <!-- ── TEAM ───────────────────────────────────────────────────────── -->
+    <!-- ── TEAM -->
     <section class="team-section">
       <div class="section-head centered">
         <p class="section-eyebrow">THE PEOPLE</p>
@@ -114,7 +114,7 @@
       </div>
     </section>
 
-    <!-- ── CTA BANNER ─────────────────────────────────────────────────── -->
+    <!-- ── CTA BANNER  -->
     <section class="cta-section">
       <div class="cta-inner">
         <p class="section-eyebrow" style="color:#f2c4b8">GET STARTED</p>
@@ -243,7 +243,7 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-/* ── Reset / Base ─────────────────────────────────────────────────────── */
+/* ── Reset / Base  */
 .about-page {
   font-family: 'DM Sans', sans-serif;
   background: #f6f4f1;

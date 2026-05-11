@@ -254,7 +254,7 @@
     <section class="faq-section">
       <div class="section-head centered">
         <p class="section-eyebrow">FAQ</p>
-        <h2 class="section-title">Common questions</h2>
+        <h2 class="section-title">Frequently Asked Questions</h2>
       </div>
       <div class="faq-list">
         <div

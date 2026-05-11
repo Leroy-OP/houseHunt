@@ -276,7 +276,7 @@ export default {
     const showCatDrop  = ref(false);
 
     const typeSuggestions     = ['Bedsitters', 'Single Room', 'Studio Apartment'];
-    const categorySuggestions = ['Hostels', 'Apartments Outside'];
+    const categorySuggestions = ['Apartments', 'Bedsitters', 'studio'];
 
     const filteredTypeSuggestions = computed(() =>
       !type.value ? [] : typeSuggestions.filter(s => s.toLowerCase().includes(type.value.toLowerCase()))

@@ -4,7 +4,7 @@ Vue Frontend  →  Django REST API  →  Postgres Database
                 Media Storage (Images)
 ```
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 house-hunting-system/

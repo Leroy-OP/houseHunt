@@ -40,12 +40,12 @@
           <img
             v-if="user && user.avatar"
             :src="user.avatar"
-            :alt="user.name"
+            :alt="userName"
             class="avatar-img"
             @error="onAvatarError"
           />
-          <div v-else-if="user && user.name" class="avatar-initials">
-            {{ getInitials(user.name) }}
+          <div v-else-if="user && userName" class="avatar-initials">
+            {{ getInitials(userName) }}
           </div>
           <div v-else class="avatar-guest">
             <i class="fas fa-user"></i>
@@ -57,11 +57,11 @@
             <div class="user-drop" v-if="userMenuOpen" @click.stop>
               <div class="drop-profile" v-if="user">
                 <div class="drop-avatar">
-                  <img v-if="user.avatar" :src="user.avatar" :alt="user.name" @error="onAvatarError" />
-                  <div v-else class="drop-initials">{{ getInitials(user.name) }}</div>
+                  <img v-if="user.avatar" :src="user.avatar" :alt="userName" @error="onAvatarError" />
+                  <div v-else class="drop-initials">{{ getInitials(userName) }}</div>
                 </div>
                 <div class="drop-info">
-                  <p class="drop-name">{{ user.name }}</p>
+                  <p class="drop-name">{{ userName }}</p>
                   <p class="drop-email">{{ user.email }}</p>
                 </div>
               </div>
@@ -154,11 +154,11 @@
       <div class="drawer-body" v-if="drawerTab === 'menu'">
         <div class="drawer-user-card" v-if="user">
           <div class="drawer-user-avatar">
-            <img v-if="user.avatar" :src="user.avatar" :alt="user.name" @error="onAvatarError" />
-            <div v-else class="drawer-user-initials">{{ getInitials(user.name) }}</div>
+            <img v-if="user.avatar" :src="user.avatar" :alt="userName" @error="onAvatarError" />
+            <div v-else class="drawer-user-initials">{{ getInitials(userName) }}</div>
           </div>
           <div class="drawer-user-info">
-            <p class="drawer-user-name">{{ user.name }}</p>
+            <p class="drawer-user-name">{{ userName }}</p>
             <p class="drawer-user-email">{{ user.email }}</p>
           </div>
         </div>
@@ -310,7 +310,7 @@ import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 const API_BASE      = 'http://127.0.0.1:8000/api/notifications/notifications/';
-const POLL_INTERVAL = 30_000; 
+const POLL_INTERVAL = 30_000;
 
 const getToken = () => localStorage.getItem('authToken') || '';
 
@@ -323,7 +323,6 @@ function relativeTime(iso) {
   return `${Math.floor(diff / 86400)}d ago`;
 }
 
-/** Map a raw API payload to the internal notification shape. */
 function normalise(raw) {
   return {
     id:    raw.id    ?? Date.now(),
@@ -335,19 +334,13 @@ function normalise(raw) {
   };
 }
 
-/**
- * Centralised fetch wrapper that:
- *   • Always injects the Authorization header with the latest token.
- *   • Throws a typed error (err.status = 401) on authentication failure
- *     so every caller can redirect to /login without duplicating logic.
- */
 async function authFetch(url, options = {}) {
   const token = getToken();
   const res = await fetch(url, {
     ...options,
     headers: {
-      'Content-Type':  'application/json',
-      'Accept':        'application/json',
+      'Content-Type': 'application/json',
+      'Accept':       'application/json',
       ...options.headers,
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
@@ -362,28 +355,26 @@ async function authFetch(url, options = {}) {
   return res;
 }
 
-// ── Component ────────────────────────────────────────────────────────────
-
 export default {
   name: 'AppNavbar',
 
   setup() {
     const router = useRouter();
 
-    // ── Scroll ────────────────────────────────────────────────────────
+    // ── Scroll
     const isScrolled = ref(false);
     const onScroll   = () => { isScrolled.value = window.scrollY > 20; };
-    onMounted(()        => window.addEventListener('scroll', onScroll));
-    onBeforeUnmount(()  => window.removeEventListener('scroll', onScroll));
+    onMounted(()       => window.addEventListener('scroll', onScroll));
+    onBeforeUnmount(() => window.removeEventListener('scroll', onScroll));
 
-    // ── Mobile nav ────────────────────────────────────────────────────
+    // ── Mobile nav
     const mobileOpen = ref(false);
 
-    // ── Drawer ────────────────────────────────────────────────────────
+    // ── Drawer
     const drawerOpen = ref(false);
     const drawerTab  = ref('menu');
 
-    // ── User ─────────────────────────────────────────────────────────
+    // ── User
     const user = ref(null);
 
     const loadUser = () => {
@@ -397,6 +388,13 @@ export default {
 
     onMounted(loadUser);
 
+    // ── Derived full name from first_name + last_name (or fallback to name)
+    const userName = computed(() => {
+      if (!user.value) return '';
+      if (user.value.name) return user.value.name;
+      return [user.value.first_name, user.value.last_name].filter(Boolean).join(' ');
+    });
+
     const getInitials = (name) => {
       if (!name) return '?';
       return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
@@ -404,7 +402,7 @@ export default {
 
     const onAvatarError = (e) => { e.target.style.display = 'none'; };
 
-    // ── Notifications (declared early so logout can reference stopPolling) ──
+    // ── Notifications
     const notifications = ref([]);
     const notifLoading  = ref(false);
     const notifError    = ref(null);
@@ -415,8 +413,7 @@ export default {
       if (pollTimer !== null) { clearInterval(pollTimer); pollTimer = null; }
     };
 
-    // ── Handle a 401 from any API call ────────────────────────────────
-    // Clears all auth state, stops polling, and redirects to login.
+    // ── Handle 401
     const handleUnauthorized = () => {
       localStorage.removeItem('authToken');
       localStorage.removeItem('currentUser');
@@ -428,7 +425,7 @@ export default {
       router.push('/login');
     };
 
-    // ── Logout ────────────────────────────────────────────────────────
+    // ── Logout
     const logout = () => {
       localStorage.removeItem('currentUser');
       localStorage.removeItem('authToken');
@@ -440,7 +437,7 @@ export default {
       router.push('/');
     };
 
-    // ── User dropdown ─────────────────────────────────────────────────
+    // ── User dropdown
     const userMenuOpen = ref(false);
     const avatarRef    = ref(null);
     const toggleUserMenu = () => { userMenuOpen.value = !userMenuOpen.value; };
@@ -454,32 +451,14 @@ export default {
     onMounted(()       => document.addEventListener('click', onClickOutside));
     onBeforeUnmount(() => document.removeEventListener('click', onClickOutside));
 
-    // ── Saved count ───────────────────────────────────────────────────
+    // ── Saved count
     const savedCount = computed(() => {
       try { return JSON.parse(localStorage.getItem('savedProperties') || '[]').length; }
       catch { return 0; }
     });
 
-    // ─────────────────────────────────────────────────────────────────
-    // NOTIFICATIONS
-    // ─────────────────────────────────────────────────────────────────
-    //
-    // Flow:
-    //   1. onMounted  → fetch once (only when token exists).
-    //   2. startPolling → setInterval every POLL_INTERVAL ms.
-    //      New items (by id) are prepended with an animation; known items
-    //      get their read/time state refreshed in-place.
-    //   3. markRead   → optimistic PATCH; reverts on failure.
-    //   4. clearAll   → optimistic DELETE; reverts on failure.
-    //   5. Any 401    → handleUnauthorized() clears auth & redirects.
-    //   6. watch(user)→ starts/stops polling when auth state changes
-    //                   within the same page session.
-    //   7. storage    → cross-tab sync for authToken / currentUser.
-    //
-    // ─────────────────────────────────────────────────────────────────
-
+    // ── Fetch notifications
     const fetchNotifications = async () => {
-      // Never fire a request without a token.
       if (!getToken()) return;
 
       if (notifications.value.length === 0) notifLoading.value = true;
@@ -493,15 +472,12 @@ export default {
         const raw      = Array.isArray(json) ? json : (json.data ?? []);
         const incoming = raw.map(normalise).sort((a, b) => b.id - a.id);
 
-        // Merge: prepend new items, refresh known ones in-place.
         const existingMap = new Map(notifications.value.map(n => [n.id, n]));
         const newItems    = incoming.filter(n => !existingMap.has(n.id));
 
         incoming.forEach(n => {
           if (existingMap.has(n.id)) {
             const existing = existingMap.get(n.id);
-            // Don't override an optimistic read=true that hasn't been
-            // confirmed by the server yet.
             if (!existing.read) existing.read = n.read;
             existing.time = n.time;
           }
@@ -522,12 +498,10 @@ export default {
 
     const startPolling = () => {
       stopPolling();
-      // Never schedule polling without a valid token.
       if (!getToken()) return;
       pollTimer = setInterval(fetchNotifications, POLL_INTERVAL);
     };
 
-    // Bootstrap on mount.
     onMounted(async () => {
       if (getToken()) {
         await fetchNotifications();
@@ -537,24 +511,17 @@ export default {
 
     onBeforeUnmount(stopPolling);
 
-    // ── Watch: in-page auth state changes ────────────────────────────
-    // Handles the case where another component (e.g. a login page) sets
-    // user.value directly rather than triggering a full page reload.
     watch(user, (newVal, oldVal) => {
       if (newVal && !oldVal && getToken()) {
-        // Just logged in.
         fetchNotifications();
         startPolling();
       } else if (!newVal && oldVal) {
-        // Just logged out.
         stopPolling();
         notifications.value = [];
       }
     });
 
-    // ── Cross-tab sync via storage events ────────────────────────────
-    // When the user logs in or out in another browser tab, keep this
-    // navbar in sync without requiring a manual page refresh.
+    // ── Cross-tab sync
     const onStorageChange = (e) => {
       if (e.key === 'currentUser') {
         loadUser();
@@ -573,18 +540,17 @@ export default {
     onMounted(()       => window.addEventListener('storage', onStorageChange));
     onBeforeUnmount(() => window.removeEventListener('storage', onStorageChange));
 
-    // ── Derived state ─────────────────────────────────────────────────
+    // ── Derived state
     const notificationCount = computed(() =>
       notifications.value.filter(n => !n.read).length
     );
 
-    // ── Mark a single notification as read ────────────────────────────
+    // ── Mark read
     const markRead = async (n) => {
       if (n.read) return;
-      n.read = true; // optimistic
+      n.read = true;
 
       try {
-        // API_BASE already ends with '/' — append id directly, no double slash.
         const res = await authFetch(`${API_BASE}${n.id}/`, {
           method: 'PATCH',
           body:   JSON.stringify({ read: true }),
@@ -593,14 +559,14 @@ export default {
       } catch (err) {
         if (err.status === 401) { handleUnauthorized(); return; }
         console.warn('[AppNavbar] markRead failed:', err);
-        n.read = false; // revert
+        n.read = false;
       }
     };
 
-    // ── Clear all notifications ───────────────────────────────────────
+    // ── Clear all
     const clearNotifications = async () => {
       const backup        = [...notifications.value];
-      notifications.value = []; // optimistic
+      notifications.value = [];
 
       try {
         const res = await authFetch('http://127.0.0.1:8000/api/notifications/notifications/clear/', { method: 'DELETE' });
@@ -608,11 +574,10 @@ export default {
       } catch (err) {
         if (err.status === 401) { handleUnauthorized(); return; }
         console.warn('[AppNavbar] clearNotifications failed:', err);
-        notifications.value = backup; // revert
+        notifications.value = backup;
       }
     };
 
-    /** Map notification type → Font Awesome icon class. */
     const notifIcon = (type) => ({
       listing:   'fas fa-home',
       booking:   'fas fa-calendar-alt',
@@ -623,7 +588,7 @@ export default {
     return {
       isScrolled, mobileOpen,
       drawerOpen, drawerTab,
-      user, getInitials, onAvatarError, logout,
+      user, userName, getInitials, onAvatarError, logout,
       userMenuOpen, avatarRef, toggleUserMenu,
       savedCount,
       notifications, notifLoading, notifError,

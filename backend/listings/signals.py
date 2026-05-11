@@ -20,7 +20,7 @@ def property_created_notification(sender, instance, created, **kwargs):
         Notification.objects.bulk_create([
             Notification(
                 user=user,
-                type='listing',                        # ← was notification_type
+                type='listing',                       
                 title='New Property Listed',
                 body=f'A new property "{instance.title}" is now available.',
             )
@@ -58,7 +58,7 @@ def booking_notification(sender, instance, created, **kwargs):
 
         Notification.objects.create(
             user=agency_user,
-            type='booking',                            # ← was notification_type
+            type='booking',                            
             title='New Booking Request',
             body=f'"{tenant_name}" has requested to book "{prop.title}".',
         )

@@ -18,10 +18,6 @@ from .serializers import (
 User = get_user_model()
 
 
-# =========================
-# AUTH VIEWS
-# =========================
-
 @api_view(['POST'])
 def register(request):
     data     = request.data

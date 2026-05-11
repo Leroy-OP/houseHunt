@@ -21,12 +21,12 @@
 
         <div class="testimonial-card">
           <p class="testimonial-text">
-            "Found my dream apartment in Kilimani within a week. The process was seamless."
+            "Found my dream apartment in Masai Lodge within a week. The process was seamless."
           </p>
           <div class="testimonial-author">
-            <div class="testimonial-avatar">AW</div>
+            <div class="testimonial-avatar">DR</div>
             <div>
-              <p class="testimonial-name">Amina Wanjiru</p>
+              <p class="testimonial-name">Deborah Rotich</p>
               <p class="testimonial-role">Verified Tenant</p>
             </div>
           </div>
@@ -37,7 +37,7 @@
 
         <div class="visual-stats">
           <div class="vstat">
-            <span class="vstat-num">2,400+</span>
+            <span class="vstat-num">1,000+</span>
             <span class="vstat-label">Listings</span>
           </div>
           <div class="vstat-divider"></div>

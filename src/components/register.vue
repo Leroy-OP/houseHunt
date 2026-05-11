@@ -288,18 +288,13 @@ import axios from 'axios';
 // ─────────────────────────────────────────────────────────────────
 //  Constants
 // ─────────────────────────────────────────────────────────────────
-const LS_ACCOUNTS    = 'hs_accounts';   // array of all stored accounts
-const LS_ACTIVE      = 'hs_active_id';  // id of the currently active account
+const LS_ACCOUNTS    = 'hs_accounts';   
+const LS_ACTIVE      = 'hs_active_id';  
 
-/*
- * FLAT KEYS — these are the keys that every other page in the app reads with
- * localStorage.getItem(). We write to them every time an account becomes active
- * so those pages always find a valid token and user object, never null.
- */
-const LS_TOKEN        = 'authToken';         // flat access token  (read by buildAuthHeaders)
-const LS_ACCESS_TOKEN = 'access_token';  // alias              (read by buildAuthHeaders)
-const LS_REFRESH      = 'refresh_token'; // flat refresh token
-const LS_CURRENT_USER = 'currentUser';   // flat user object   (read by agent page)
+const LS_TOKEN        = 'authToken';         
+const LS_ACCESS_TOKEN = 'access_token';  
+const LS_REFRESH      = 'refresh_token'; 
+const LS_CURRENT_USER = 'currentUser';   
 
 const AVATAR_COLORS = [
   '#b73f2a','#2d6a4f','#2b5a9e','#7b3fa0',
@@ -351,13 +346,6 @@ function pickColor(email = '') {
   return AVATAR_COLORS[Math.abs(h) % AVATAR_COLORS.length];
 }
 
-/**
- * Write ALL the flat keys that the rest of the app expects.
- *
- * This is the single most important function for fixing the null problem:
- * every page that calls localStorage.getItem('token'), getItem('access_token'),
- * or getItem('currentUser') will now always find a value after login/register.
- */
 function writeFlatSession(acc) {
   if (!acc) {
     // Clear everything on logout / last account removed
@@ -428,14 +416,14 @@ function persistAccount({ id, name, email, phone, accountType, token, refreshTok
   else          existing.push(entry);
 
   saveAccounts(existing);
-  setActive(id);   // <-- writes all flat keys + axios header
+  setActive(id);   
 }
 
 // ─────────────────────────────────────────────────────────────────
 //  Public account actions
 // ─────────────────────────────────────────────────────────────────
 
-/** Switch active account from the switcher UI */
+
 function switchAccount(acc) {
   setActive(acc.id);   // writes flat keys for the switched-to account
   const dest = acc.accountType === 'agent' ? '/agents' : '/properties';
@@ -550,18 +538,15 @@ const handleRegister = async () => {
       account_type: form.value.accountType,
     });
 
-    /*
-     * Handle both common Django JWT response shapes:
-     *   { access: "eyJ…", refresh: "eyJ…", user: { id, … } }
-     *   { token:  "eyJ…", user: { id, … } }
-     */
+  
+     
     const token        = data.access  ?? data.token  ?? null;
     const refreshToken = data.refresh ?? null;
     const userId       = data.user?.id ?? data.id ?? crypto.randomUUID();
 
     if (!token) throw new Error('NO_TOKEN');
 
-    const accountType = form.value.accountType;  // capture before reset
+    const accountType = form.value.accountType;  
 
     persistAccount({
       id:           String(userId),

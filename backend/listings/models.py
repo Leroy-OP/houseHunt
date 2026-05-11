@@ -2,10 +2,6 @@ from django.db import models
 from django.conf import settings
 
 
-# =========================
-# AGENCY
-# =========================
-
 class Agency(models.Model):
     user    = models.OneToOneField(
         settings.AUTH_USER_MODEL,
@@ -25,9 +21,6 @@ class Agency(models.Model):
         return self.name
 
 
-# =========================
-# AMENITY
-# =========================
 
 class Amenity(models.Model):
     """
@@ -75,9 +68,6 @@ class Amenity(models.Model):
         return cls.objects.all()
 
 
-# =========================
-# PROPERTY
-# =========================
 
 class Property(models.Model):
 
@@ -139,9 +129,6 @@ class Property(models.Model):
         return self.title
 
 
-# =========================
-# PROPERTY IMAGE
-# =========================
 
 class PropertyImage(models.Model):
     property = models.ForeignKey(
@@ -154,10 +141,6 @@ class PropertyImage(models.Model):
     def __str__(self):
         return f"Image for {self.property.title}"
 
-
-# =========================
-# BOOKING
-# =========================
 
 class Booking(models.Model):
     property       = models.ForeignKey(
@@ -181,9 +164,7 @@ class Booking(models.Model):
         )
 
 
-# =========================
-# INQUIRY
-# =========================
+
 
 class Inquiry(models.Model):
     property   = models.ForeignKey(

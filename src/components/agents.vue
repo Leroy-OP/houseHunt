@@ -413,10 +413,10 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import axios from 'axios';
 
-// ── Config ─────────────────────────────────────────────────────────────────
+// ── Config 
 const API_BASE = 'http://127.0.0.1:8000';
 
-// ── Cross-tab broadcast ────────────────────────────────────────────────────
+// ── Cross-tab broadcast
 const listingsChannel = typeof BroadcastChannel !== 'undefined'
   ? new BroadcastChannel('listings-updated')
   : null;
@@ -443,15 +443,13 @@ const buildAuthHeaders = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-// ── State ──────────────────────────────────────────────────────────────────
+// ── State 
 const myProperties      = ref([]);
 const loadingProperties = ref(false);
 const loadingAmenities  = ref(false);
 
-// Amenities fetched from the API — no more hardcoded list
 const amenityOptions = ref([]);
 
-// Fast O(1) lookup map: { [id]: { id, name, icon } }
 const amenityById = computed(() =>
   Object.fromEntries(amenityOptions.value.map(a => [a.id, a]))
 );
@@ -477,18 +475,18 @@ const blankForm = () => ({
   property_type: '',
   available_from: '',
   status:        'available',
-  amenity_ids:   [],   // array of numeric IDs — matches backend write field name
+  amenity_ids:   [],    
 });
 
 const form       = ref(blankForm());
 const formErrors = ref({});
 
-// ── Computed ───────────────────────────────────────────────────────────────
+// ── Computed 
 const totalViews = computed(() =>
   myProperties.value.reduce((sum, p) => sum + (p.views || 0), 0)
 );
 
-// ── Image helpers ──────────────────────────────────────────────────────────
+// ── Image helpers 
 const PLACEHOLDER = 'https://placehold.co/600x400/1a1a2e/ffffff?text=No+Image';
 
 const resolveUrl = (url) => {
@@ -563,7 +561,7 @@ const fetchAmenities = async () => {
   }
 };
 
-// ── Fetch agent's properties ───────────────────────────────────────────────
+// ── Fetch agent's properties 
 const fetchMyProperties = async () => {
   loadingProperties.value = true;
   try {
