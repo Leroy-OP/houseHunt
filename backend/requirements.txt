@@ -1,4 +1,10 @@
-Django>=4.2
+Django
 djangorestframework
-mysqlclient
+djangorestframework-simplejwt
+psycopg2-binary
 django-cors-headers
+gunicorn
+whitenoise
+Pillow
+python-decouple
+python-dotenv
